@@ -1,0 +1,82 @@
+---
+  - name: Install calico-felix server
+    become: True
+    apt:
+      name:
+        - calico-node
+        - bird
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+
+  - name: Ensure that bird is disabled
+    become: True
+    service:
+      name: "{{ item }}"
+      state: stopped
+      enabled: no
+    with_items:
+      - bird
+      - bird6
+
+  - name: Upload calico environment
+    become: True
+    template:
+      src: calico-env.j2
+      dest: /etc/calico/env.sh
+      owner: root
+      group: root
+      mode: 0644
+    notify:
+      - restart calico-felix
+      - restart calico-confd
+
+  - name: Create calico config folders
+    become: True
+    file:
+      path: "/etc/calico/{{ item }}"
+      owner: root
+      group: root
+      mode: 0750
+      state: directory
+    with_items:
+      - confd
+      - confd/conf.d
+      - confd/templates
+
+  - name: Upload calico templates
+    become: True
+    copy:
+      src: "files/confd/{{ item }}"
+      dest: "/etc/calico/confd/{{ item }}"
+      owner: root
+      group: root
+      mode: 0640
+    with_items:
+    # There are more files, but we only upload those we need *right now*
+      - conf.d/bird.toml
+      - conf.d/bird_aggr.toml
+      - conf.d/bird_ipam.toml
+      - templates/bird.cfg.template
+      - templates/bird_aggr.cfg.template
+      - templates/bird_ipam.cfg.template
+
+  - name: Add calico-felix service
+    become: True
+    template:
+      src: calico-felix.service.j2
+      dest: /etc/systemd/system/calico-felix.service
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart calico-felix
+
+  - name: Add calico-confd service
+    become: True
+    template:
+      src: calico-confd.service.j2
+      dest: /etc/systemd/system/calico-confd.service
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart calico-confd

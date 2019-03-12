@@ -1,0 +1,16 @@
+---
+  - name: restart calico-felix
+    become: True
+    systemd:
+      name: calico-felix
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+
+  - name: restart calico-confd
+    become: True
+    systemd:
+      name: calico-confd
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
