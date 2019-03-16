@@ -1,23 +1,24 @@
 ---
-  - name: Install calico-felix server
+  - name: Install software
     become: True
     apt:
       name:
         - calico-node
         - bird
         - ipset
+        - calico-cni-plugin
+        - cni-plugins
       state: present
       update_cache: yes
       cache_valid_time: 1800
 
-  - name: Ensure that bird is disabled
+  - name: Ensure that bird6 is disabled
     become: True
     service:
       name: "{{ item }}"
       state: stopped
       enabled: no
     with_items:
-      - bird
       - bird6
 
   - name: Upload calico environment
@@ -81,3 +82,25 @@
       group: root
       mode: 0644
     notify: restart calico-confd
+
+  - name: Ensure cni config dir exists
+    become: True
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
+    with_items:
+      - /etc/cni
+      - /etc/cni/net.d
+
+  - name: Configure calico cni plugin
+    become: True
+    template:
+      src: calico-cni.json.j2
+      dest: /etc/cni/net.d/calico-ipam.json
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart kubelet

@@ -23,4 +23,4 @@ FELIX_TYPHACAFILE=/etc/calico/typha/ca.pem
 FELIX_TYPHACERTFILE=/etc/calico/typha/client.cert
 FELIX_TYPHAKEYFILE=/etc/calico/typha/client.key
 FELIX_TYPHAURISAN=spiffe://{{ kubernetes_ha_domain_intern }}/calico/typha-server
-CALICO_ADVERTISE_CLUSTER_IPS=true
+CALICO_ADVERTISE_CLUSTER_IPS={{ kubernetes_service_cidr }}
