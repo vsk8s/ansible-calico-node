@@ -8,6 +8,7 @@
         - ipset
         - calico-cni-plugin
         - cni-plugins
+        - conntrack
       state: present
       update_cache: yes
       cache_valid_time: 1800

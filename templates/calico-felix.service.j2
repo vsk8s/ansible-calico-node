@@ -3,6 +3,7 @@ Description=Calcio felix server
 
 [Service]
 ExecStart=/usr/bin/calico-node -felix
+ExecStartPre=-/bin/mkdir -p /var/run/secrets/kubernetes.io/serviceaccount
 Restart=on-failure
 EnvironmentFile=/etc/calico/env.sh
 # ALL VARIABLES NEED TO BE LISTED HERE
