@@ -62,6 +62,7 @@
       - templates/bird.cfg.template
       - templates/bird_aggr.cfg.template
       - templates/bird_ipam.cfg.template
+    notify: restart calico-confd
 
   - name: Add calico-felix service
     become: True

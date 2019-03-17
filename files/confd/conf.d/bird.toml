@@ -1,6 +1,6 @@
 [template]
 src = "bird.cfg.template"
-dest = "/etc/bird/bird.cfg"
+dest = "/etc/bird/bird.conf"
 prefix = "/calico/bgp/v1"
 keys = [
     "/host",
