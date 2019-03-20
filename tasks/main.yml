@@ -106,3 +106,13 @@
       group: root
       mode: 0644
     notify: restart kubelet
+
+  - name: Configure kernel parameters
+    become: True
+    template:
+      src: sysctl.conf.j2
+      dest: /etc/sysctl.d/80-calico-node.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart sysctl

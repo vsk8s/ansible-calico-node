@@ -20,3 +20,9 @@
     service:
       name: kubelet
       state: restarted
+
+  - name: restart sysctl
+    become: True
+    service:
+      name: systemd-sysctl
+      state: restarted
