@@ -1,0 +1,2 @@
+calico_node_default_route_via_bgp: False
+calico_node_default_router: False

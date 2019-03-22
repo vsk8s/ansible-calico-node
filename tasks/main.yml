@@ -116,3 +116,24 @@
       group: root
       mode: 0644
     notify: restart sysctl
+
+  - name: Create bird drop-in directory
+    become: True
+    when: calico_node_default_route_via_bgp
+    file:
+      path: /etc/systemd/system/bird.service.d
+      owner: root
+      group: root
+      mode: 0755
+      state: directory
+
+  - name: Add 'remote-default-route' dropin to bird
+    become: True
+    when: calico_node_default_route_via_bgp
+    template:
+      src: bird-dropin.j2
+      dest: /etc/systemd/system/bird.service.d/50-delete-default-route.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: reload systemd

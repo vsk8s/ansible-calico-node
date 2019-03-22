@@ -1,0 +1,2 @@
+[Service]
+ExecStartPre=-/bin/ip route delete default via {{ calico_node_default_router }}

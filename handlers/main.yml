@@ -26,3 +26,10 @@
     service:
       name: systemd-sysctl
       state: restarted
+
+  - name: reload systemd
+    become: True
+    systemd:
+      name: calico-confd
+      state: restarted
+      daemon_reload: yes
