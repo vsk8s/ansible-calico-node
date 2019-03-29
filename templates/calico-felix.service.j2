@@ -1,5 +1,6 @@
 [Unit]
 Description=Calcio felix server
+After=kube-proxy.service
 
 [Service]
 ExecStart=/usr/bin/calico-node -felix
