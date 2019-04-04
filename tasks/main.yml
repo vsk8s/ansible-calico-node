@@ -137,3 +137,26 @@
       group: root
       mode: 0644
     notify: reload systemd
+
+  - name: Add the apiserver-connectivity service
+    become: True
+    template:
+      src: "apiserver-connectivity.{{ item }}.j2"
+      dest: "/etc/systemd/system/apiserver-connectivity.{{ item }}"
+      owner: root
+      group: root
+      mode: 0644
+    notify: enable connectivity timer
+    with_items:
+      - service
+      - timer
+
+  - name: Add the bird stopping service
+    become: True
+    template:
+      src: "stop-bird.service.j2"
+      dest: "/etc/systemd/system/stop-bird.service"
+      owner: root
+      group: root
+      mode: 0644
+    notify: enable connectivity timer
