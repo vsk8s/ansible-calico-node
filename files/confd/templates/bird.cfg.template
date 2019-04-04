@@ -128,24 +128,3 @@ protocol bgp Global_{{$id}} from bgp_template {
 {{end}}
 {{else}}# No global peers configured.{{end}}
 
-
-# ------------- Node-specific peers -------------
-{{$node_peers_key := printf "/host/%s/peer_v4" (getenv "NODENAME")}}
-{{if ls $node_peers_key}}
-{{range gets (printf "%s/*" $node_peers_key)}}{{$data := json .Value}}
-{{$nums := split $data.ip "."}}{{$id := join $nums "_"}}
-# For peer {{.Key}}
-{{- if eq $data.ip ($node_ip) }}
-# Skipping ourselves ({{$node_ip}})
-{{- else}}
-protocol bgp Node_{{$id}} from bgp_template {
-  neighbor {{$data.ip}} as {{$data.as_num}};
-{{- if and (eq $data.as_num $node_as_num) (ne "" ($node_cluster_id)) (ne $data.rr_cluster_id ($node_cluster_id))}}
-  rr client;
-  rr cluster id {{$node_cluster_id}};
-{{- end}}
-}
-{{- end}}
-{{end}}
-{{else}}# No node-specific peers configured.{{end}}
-{{end}}{{/* End of IPv4 enable check */}}
