@@ -1,8 +1,0 @@
-[Unit]
-Description=Checks connectivity to the Kubernetes API server's service IP
-OnFailure=stop-bird.service
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/curl -s -f -k https://{{ kubernetes_api_service_ip }}/healthz
-ExecStartPost=/bin/systemctl start bird.service
