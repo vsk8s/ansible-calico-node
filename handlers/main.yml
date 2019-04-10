@@ -30,6 +30,12 @@
   - name: reload systemd
     become: True
     systemd:
-      name: calico-confd
-      state: restarted
       daemon_reload: yes
+
+  - name: enable connectivity timer
+    become: True
+    systemd:
+      name: apiserver-connectivity.timer
+      daemon_reload: yes
+      enabled: yes
+      state: started
