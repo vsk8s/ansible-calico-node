@@ -2,9 +2,13 @@
 src = "bird.cfg.template"
 dest = "/etc/bird/bird.conf"
 prefix = "/calico/bgp/v1"
+uid = {{ calico_node_bird_user[1] }}
+gid = {{ calico_node_bird_user[2] }}
 keys = [
     "/host",
     "/global",
 ]
+{% raw %}
 check_cmd = "bird -p -c {{.src}}"
 reload_cmd = "systemctl restart bird || true"
+{% endraw %}

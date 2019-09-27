@@ -1,6 +1,8 @@
 [template]
 src = "bird_aggr.cfg.template"
 dest = "/etc/bird/bird_aggr.cfg"
+uid = {{ calico_node_bird_user[1] }}
+gid = {{ calico_node_bird_user[2] }}
 keys = [
     "/calico/ipam/v2/host//NODENAME/ipv4/block",
     "/calico/staticroutes",

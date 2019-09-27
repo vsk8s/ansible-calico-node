@@ -1,6 +1,8 @@
 [template]
 src = "bird_ipam.cfg.template"
 dest = "/etc/bird/bird_ipam.cfg"
+uid = {{ calico_node_bird_user[1] }}
+gid = {{ calico_node_bird_user[2] }}
 prefix = "/calico"
 keys = [
     "/v1/ipam/v4/pool",

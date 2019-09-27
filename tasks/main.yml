@@ -57,12 +57,33 @@
       mode: 0640
     with_items:
     # There are more files, but we only upload those we need *right now*
-      - conf.d/bird.toml
-      - conf.d/bird_aggr.toml
-      - conf.d/bird_ipam.toml
       - templates/bird.cfg.template
       - templates/bird_aggr.cfg.template
       - templates/bird_ipam.cfg.template
+    notify: restart calico-confd
+
+  - name: Lookup bird user
+    become: True
+    getent:
+      database: passwd
+      key: bird
+      split: ':'
+
+  - name: Upload calico templates templates
+    become: True
+    template:
+      src: "{{ item }}.j2"
+      dest: "/etc/calico/confd/conf.d/{{ item }}"
+      owner: root
+      group: root
+      mode: 0640
+    vars:
+      calico_node_bird_user: "{{ getent_passwd.bird }}"
+    with_items:
+    # There are more files, but we only upload those we need *right now*
+      - bird.toml
+      - bird_aggr.toml
+      - bird_ipam.toml
     notify: restart calico-confd
 
   - name: Add calico-felix service
