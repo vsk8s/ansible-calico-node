@@ -182,5 +182,5 @@
       mode: 0644
     notify: enable connectivity timer
 
-- name: Flush handlers
-  meta: flush_handlers
+  - name: Flush handlers
+    meta: flush_handlers
