@@ -20,6 +20,8 @@
     service:
       name: kubelet
       state: restarted
+    failed_when: False
+    # The node might not _have_ a kubelet (yet). So don't care about failure...
 
   - name: restart sysctl
     become: True
