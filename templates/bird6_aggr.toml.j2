@@ -3,8 +3,11 @@ src = "bird6_aggr.cfg.template"
 dest = "/etc/bird/bird6_aggr.cfg"
 uid = {{ calico_node_bird_user[1] }}
 gid = {{ calico_node_bird_user[2] }}
+prefix = "/calico/"
 keys = [
-    "/calico/ipam/v2/host//NODENAME/ipv6/block",
+    "/bgp/v1/host",
+    "/bgp/v1/global",
+    "/ipam/v2/host//NODENAME/ipv6/block",
     "/staticroutesv6",
 ]
 reload_cmd = "systemctl restart bird6 || true"
