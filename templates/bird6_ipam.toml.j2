@@ -1,0 +1,10 @@
+[template]
+src = "bird6_ipam.cfg.template"
+dest = "/etc/bird/bird6_ipam.cfg"
+uid = {{ calico_node_bird_user[1] }}
+gid = {{ calico_node_bird_user[2] }}
+prefix = "/calico/v1/ipam/v6"
+keys = [
+    "/pool",
+]
+reload_cmd = "systemctl restart bird6 || true"

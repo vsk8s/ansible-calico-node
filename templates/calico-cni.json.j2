@@ -5,10 +5,18 @@
     "log_level": "info",
     "datastore_type": "kubernetes",
     "mtu": 1500,
+{% if calico_ipv6_enabled %}
+    "ipam": {
+        "type": "calico-ipam",
+        "assign_ipv4": "true",
+        "assign_ipv6": "true"
+    },
+{% else %}
     "ipam": {
         "type": "host-local",
         "subnet": "usePodCidr"
     },
+{% endif %}
     "policy": {
         "type": "k8s"
     },

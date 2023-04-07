@@ -1,0 +1,14 @@
+[template]
+src = "bird6.cfg.template"
+dest = "/etc/bird/bird6.conf"
+prefix = "/calico/bgp/v1"
+uid = {{ calico_node_bird_user[1] }}
+gid = {{ calico_node_bird_user[2] }}
+keys = [
+    "/host",
+    "/global",
+]
+{% raw %}
+check_cmd = "bird6 -p -c {{.src}}"
+reload_cmd = "systemctl restart bird6 || true"
+{% endraw %}

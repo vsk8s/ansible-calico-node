@@ -21,6 +21,7 @@
       enabled: no
     with_items:
       - bird6
+    when: not calico_ipv6_enabled
 
   - name: Upload calico environment
     become: True
@@ -56,10 +57,25 @@
       group: root
       mode: 0640
     with_items:
-    # There are more files, but we only upload those we need *right now*
+      # There are more files, but we only upload those we need *right now*
       - templates/bird.cfg.template
       - templates/bird_aggr.cfg.template
       - templates/bird_ipam.cfg.template
+    notify: restart calico-confd
+
+  - name: Upload calico templates (IPv6)
+    become: True
+    when: calico_ipv6_enabled
+    copy:
+      src: "files/confd/{{ item }}"
+      dest: "/etc/calico/confd/{{ item }}"
+      owner: root
+      group: root
+      mode: 0640
+    with_items:
+      - templates/bird6.cfg.template
+      - templates/bird6_aggr.cfg.template
+      - templates/bird6_ipam.cfg.template
     notify: restart calico-confd
 
   - name: Lookup bird user
@@ -80,10 +96,28 @@
     vars:
       calico_node_bird_user: "{{ getent_passwd.bird }}"
     with_items:
-    # There are more files, but we only upload those we need *right now*
+      # There are more files, but we only upload those we need *right now*
       - bird.toml
       - bird_aggr.toml
       - bird_ipam.toml
+    notify: restart calico-confd
+
+  - name: Upload calico templates templates (IPv6)
+    when: calico_ipv6_enabled
+    become: True
+    template:
+      src: "{{ item }}.j2"
+      dest: "/etc/calico/confd/conf.d/{{ item }}"
+      owner: root
+      group: root
+      mode: 0640
+    vars:
+      calico_node_bird_user: "{{ getent_passwd.bird }}"
+    with_items:
+      # There are more files, but we only upload those we need *right now*
+      - bird6.toml
+      - bird6_aggr.toml
+      - bird6_ipam.toml
     notify: restart calico-confd
 
   - name: Add calico-felix service

@@ -14,7 +14,6 @@ CALICO_IPV4POOL_CIDR={{ kubernetes_cluster_cidr }}
 CALICO_DISABLE_FILE_LOGGING=true
 FELIX_DEFAULTENDPOINTTOHOSTACTION=ACCEPT
 FELIX_IPTABLESBACKEND=NFT
-FELIX_IPV6SUPPORT=false
 FELIX_HEALTHENABLED=false
 FELIX_LOGSEVERITYSCREEN=info
 KUBERNETES_SERVICE_HOST={{ kubernetes_ha_domain_intern }}
@@ -24,3 +23,11 @@ FELIX_TYPHACERTFILE=/etc/calico/typha/client.cert
 FELIX_TYPHAKEYFILE=/etc/calico/typha/client.key
 FELIX_TYPHAURISAN=spiffe://{{ kubernetes_ha_domain_intern }}/calico/typha-server
 USE_POD_CIDR=true
+{% if calico_ipv6_enabled %}
+IP6=autodetect
+IP6_AUTODETECTION_METHOD="can-reach=www.google.com"
+FELIX_IPV6SUPPORT=true
+CALICO_IPV6POOL_CIDR={{ kubernetes_cluster_cidr_v6 }}
+{% else %}
+FELIX_IPV6SUPPORT=false
+{% endif %}

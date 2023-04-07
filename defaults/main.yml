@@ -1,3 +1,4 @@
 calico_node_default_route_via_bgp: False
 calico_node_default_router: False
 calico_node_default_route_metric: 10000
+calico_ipv6_enabled: False
